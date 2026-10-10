@@ -1,0 +1,496 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NO 1 HACKII</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root { --red: #ef4444; --dark: #050000; --gold: #fbbf24; }
+        body { margin: 0; background: var(--dark); color: #fff; font-family: 'Rajdhani', sans-serif; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+
+        #stage2{display:none;position:fixed;inset:0;width:100%;height:100%;z-index:9999;background:#02060d;overflow:hidden}
+        #stage2 iframe{display:block;width:100%;height:100%;border:0;background:#02060d}
+        #stage1{position:relative;isolation:isolate;box-shadow:0 0 35px rgba(239,68,68,.13),inset 0 0 30px rgba(239,68,68,.04);animation:panelBoot .65s ease both}
+        #stage1:before{content:"";position:absolute;inset:-1px;z-index:-1;pointer-events:none;background:linear-gradient(115deg,transparent 25%,rgba(239,68,68,.09),transparent 70%);background-size:220% 100%;animation:panelSweep 5s linear infinite}
+        #stage1 .glitch{animation:glitchPulse 3.5s steps(1,end) infinite}
+        #stage1 button{transition:filter .2s,transform .2s,box-shadow .2s}
+        #stage1 button:hover{filter:brightness(1.25);transform:translateY(-1px);box-shadow:0 0 22px rgba(239,68,68,.22)}
+        @keyframes panelBoot{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+        @keyframes panelSweep{to{background-position:-220% 0}}
+        @keyframes glitchPulse{0%,94%,100%{text-shadow:2px 2px var(--red)}95%{text-shadow:-3px 0 #00f5ff,3px 2px var(--red)}97%{text-shadow:3px -1px #ff31d7,-2px 1px var(--red)}}
+        /* --- STAGE 1 STYLES --- */
+        #stage1 { width: 350px; padding: 40px; border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(10, 0, 0, 0.95); text-align: center; backdrop-filter: blur(15px); }
+        .glitch { font-family: 'Orbitron', sans-serif; font-size: 48px; font-weight: 900; color: #fff; text-shadow: 2px 2px var(--red); margin-bottom: 10px; }
+        input { width: 100%; padding: 15px; background: rgba(0,0,0,0.5); border: 1px solid #444; color: #fff; margin: 20px 0; text-align: center; letter-spacing: 2px; }
+        .uid-wrap { position: relative; width: 100%; margin: 20px 0; }
+        .uid-wrap input { width: 100%; margin: 0; padding-right: 48px; }
+        .uid-toggle {
+            position:absolute; right:10px; top:50%; transform:translateY(-50%);
+            width:auto; padding:7px 9px; background:transparent; color:#ef4444;
+            border:0; letter-spacing:0; cursor:pointer;
+        }
+        .uid-error {
+            min-height:16px; margin-top:-10px; color:#ff4d5e; font-size:11px;
+            letter-spacing:1px; text-align:center; text-transform:uppercase;
+        }
+        .uid-wrap.invalid input { border-color:#ff3344; box-shadow:0 0 12px rgba(255,51,68,.25); animation:uidShake .22s linear 2; }
+        @keyframes uidShake {
+            25%{transform:translateX(-4px)} 75%{transform:translateX(4px)}
+        }
+
+        button { width: 100%; padding: 15px; background: linear-gradient(90deg, #330000, var(--red)); border: none; color: white; cursor: pointer; font-weight: bold; text-transform: uppercase; letter-spacing: 3px; }
+        
+        /* --- STAGE 2 & 3 CONTAINER --- */
+        #stage2, #stage3 { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="stage1">
+        <div class="glitch">HACKII</div>
+        <div style="color:var(--red); font-size: 10px; letter-spacing: 5px;">SECURE ACCESS REQUIRED</div>
+        <div class="uid-wrap">
+            <input type="password" id="uidInput" autocomplete="off"
+                   aria-label="System UID" placeholder="ENTER SYSTEM UID">
+            <button type="button" class="uid-toggle" id="uidToggle" aria-label="Toggle UID visibility">●</button>
+        </div>
+        <div id="uidError" class="uid-error" role="alert"></div>
+        <button onclick="startSequence()">INITIATE SEQUENCE</button>
+    </div>
+
+<div id="stage2"><iframe title="HACKII boot simulator" srcdoc="&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, viewport-fit=cover&quot;&gt;
+&lt;title&gt;HACKII // Boot Simulator&lt;/title&gt;
+&lt;style&gt;
+:root{--cyan:#32f6ff;--green:#7dffb2;--pink:#ff3de2;--bg:#03070e;--line:rgba(50,246,255,.17)}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:#d9fbff;background:radial-gradient(ellipse at 50% 45%,#0b2030 0%,#050b15 48%,#010309 100%);display:grid;place-items:center;position:relative}
+#matrix{position:fixed;inset:0;width:100%;height:100%;opacity:.34}
+.grid{position:fixed;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:36px 36px;mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent);animation:gridmove 14s linear infinite}
+.scan{position:fixed;inset:-100% 0 auto;height:100%;background:linear-gradient(transparent,rgba(50,246,255,.07),transparent);animation:scan 4.2s linear infinite;pointer-events:none}
+.vignette{position:fixed;inset:0;box-shadow:inset 0 0 120px 35px #000;pointer-events:none}
+.shell{position:relative;z-index:2;width:min(760px,94vw);max-height:94dvh;overflow:hidden;border:1px solid rgba(50,246,255,.42);background:linear-gradient(145deg,rgba(4,17,29,.94),rgba(4,8,18,.96));box-shadow:0 0 35px rgba(50,246,255,.13),0 0 100px rgba(255,61,226,.07),inset 0 0 45px rgba(50,246,255,.035);clip-path:polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,22px 100%,0 calc(100% - 22px));animation:enter .55s cubic-bezier(.2,.8,.2,1) both}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--line);background:rgba(50,246,255,.045);font-size:10px;letter-spacing:2px;color:#82aeba}
+.brand{color:var(--cyan);font-weight:900;letter-spacing:3px}.pill{color:var(--green);white-space:nowrap}.pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:7px;box-shadow:0 0 12px var(--green);animation:blink .8s infinite}
+.content{padding:clamp(18px,4vw,34px)}
+.heading{text-align:center;margin-bottom:23px}.eyebrow{font-size:9px;letter-spacing:5px;color:var(--pink);margin-bottom:8px}
+h1{font-size:clamp(23px,5vw,39px);letter-spacing:clamp(2px,1vw,7px);margin:0;font-weight:900;color:#f2fdff;text-shadow:0 0 20px rgba(50,246,255,.42)}
+h1 span{color:var(--cyan)}.sub{margin-top:9px;color:#7297a5;font-size:9px;letter-spacing:2px}
+.core-wrap{display:grid;grid-template-columns:170px 1fr;gap:24px;align-items:center}
+.reactor{width:156px;height:156px;margin:auto;position:relative;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle,rgba(50,246,255,.12),transparent 62%)}
+.orbit,.orbit:before,.orbit:after{position:absolute;inset:6px;border:1px solid rgba(50,246,255,.5);border-radius:50%;animation:rotate 5s linear infinite}
+.orbit:before,.orbit:after{content:&quot;&quot;;inset:12px;border-color:rgba(255,61,226,.6);transform:rotateX(65deg) rotateY(25deg)}
+.orbit:after{inset:20px;border-color:rgba(125,255,178,.5);transform:rotateX(65deg) rotateY(-35deg);animation-direction:reverse}
+.core{width:53px;height:53px;border:1px solid var(--cyan);border-radius:50%;display:grid;place-items:center;color:var(--cyan);font-size:24px;text-shadow:0 0 16px var(--cyan);box-shadow:0 0 24px rgba(50,246,255,.2),inset 0 0 20px rgba(50,246,255,.18);animation:corepulse 1.8s ease-in-out infinite}
+.data{min-width:0}.section-title{font-size:9px;letter-spacing:3px;color:#7398a7;margin-bottom:10px;display:flex;align-items:center;gap:9px}.section-title:after{content:&quot;&quot;;height:1px;flex:1;background:var(--line)}
+.terminal{height:150px;overflow:hidden;padding:12px 14px;border:1px solid rgba(50,246,255,.18);background:rgba(0,0,0,.34);font-size:11px;line-height:1.9;color:#9ab9c4}
+.line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;transform:translateX(-8px);animation:linein .28s ease forwards}.line b{color:var(--green);font-weight:500}.line em{color:var(--cyan);font-style:normal}.line .warn{color:#ffd36b}
+.progress-area{margin-top:24px}.labels{display:flex;justify-content:space-between;gap:12px;font-size:10px;letter-spacing:1.5px;color:#91b4c0;margin-bottom:9px}.percent{color:var(--cyan);font-weight:bold}
+.track{height:8px;border:1px solid rgba(50,246,255,.24);background:#06101b;padding:1px;overflow:hidden}.fill{height:100%;width:0;background:linear-gradient(90deg,#087b9a,var(--cyan),var(--pink));box-shadow:0 0 15px var(--cyan);transition:width .12s linear;position:relative}.fill:after{content:&quot;&quot;;position:absolute;right:0;top:-3px;height:12px;width:3px;background:#fff;box-shadow:0 0 10px #fff}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:13px}.step{border:1px solid rgba(50,246,255,.13);background:rgba(50,246,255,.025);padding:9px 5px;text-align:center;color:#547481;font-size:9px;letter-spacing:1px;transition:.25s}.step strong{display:block;font-size:15px;margin-bottom:5px;color:inherit}.step.active{color:var(--cyan);border-color:rgba(50,246,255,.65);background:rgba(50,246,255,.09);box-shadow:0 0 15px rgba(50,246,255,.09)}.step.done{color:var(--green);border-color:rgba(125,255,178,.35)}
+.bottom{display:flex;justify-content:space-between;gap:12px;padding:12px 18px;border-top:1px solid var(--line);font-size:8px;letter-spacing:1.5px;color:#466875}
+@keyframes gridmove{to{background-position:36px 36px}}@keyframes scan{to{transform:translateY(300%)}}@keyframes rotate{to{transform:rotate(360deg)}}@keyframes blink{50%{opacity:.25}}@keyframes corepulse{50%{transform:scale(1.08);box-shadow:0 0 35px rgba(50,246,255,.45),inset 0 0 25px rgba(50,246,255,.3)}}@keyframes enter{from{opacity:0;transform:scale(.96) translateY(12px)}to{opacity:1;transform:none}}@keyframes linein{to{opacity:1;transform:none}}
+@media(max-width:560px){.core-wrap{grid-template-columns:1fr;gap:14px}.reactor{width:110px;height:110px}.terminal{height:126px}.content{padding:18px 14px}.heading{margin-bottom:17px}.top{font-size:8px;padding:11px}.bottom{font-size:7px}.steps{gap:5px}.step{font-size:8px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;canvas id=&quot;matrix&quot;&gt;&lt;/canvas&gt;&lt;div class=&quot;grid&quot;&gt;&lt;/div&gt;&lt;div class=&quot;scan&quot;&gt;&lt;/div&gt;&lt;div class=&quot;vignette&quot;&gt;&lt;/div&gt;
+&lt;main class=&quot;shell&quot;&gt;
+&lt;div class=&quot;top&quot;&gt;&lt;div class=&quot;brand&quot;&gt;HACKII // SYSTEM&lt;/div&gt;&lt;div class=&quot;pill&quot;&gt;&lt;i class=&quot;pulse&quot;&gt;&lt;/i&gt;SIMULATION MODE&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;content&quot;&gt;
+&lt;header class=&quot;heading&quot;&gt;&lt;div class=&quot;eyebrow&quot;&gt;SECURE BOOT PROTOCOL // 02&lt;/div&gt;&lt;h1&gt;NEURAL &lt;span&gt;INTERFACE&lt;/span&gt;&lt;/h1&gt;&lt;div class=&quot;sub&quot;&gt;INITIALIZING VISUAL SIMULATOR • PLEASE WAIT&lt;/div&gt;&lt;/header&gt;
+&lt;div class=&quot;core-wrap&quot;&gt;
+&lt;div class=&quot;reactor&quot;&gt;&lt;div class=&quot;orbit&quot;&gt;&lt;/div&gt;&lt;div class=&quot;core&quot;&gt;⌘&lt;/div&gt;&lt;/div&gt;
+&lt;section class=&quot;data&quot;&gt;&lt;div class=&quot;section-title&quot;&gt;BOOT CONSOLE / LIVE FEED&lt;/div&gt;&lt;div class=&quot;terminal&quot; id=&quot;terminal&quot; aria-live=&quot;polite&quot;&gt;&lt;/div&gt;&lt;/section&gt;
+&lt;/div&gt;
+&lt;div class=&quot;progress-area&quot;&gt;&lt;div class=&quot;labels&quot;&gt;&lt;span id=&quot;phase&quot;&gt;INITIALIZING CORE MODULES&lt;/span&gt;&lt;span class=&quot;percent&quot; id=&quot;pct&quot;&gt;00%&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;track&quot;&gt;&lt;div class=&quot;fill&quot; id=&quot;fill&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;steps&quot;&gt;&lt;div class=&quot;step active&quot; id=&quot;s1&quot;&gt;&lt;strong&gt;⌘&lt;/strong&gt;BOOT&lt;/div&gt;&lt;div class=&quot;step&quot; id=&quot;s2&quot;&gt;&lt;strong&gt;⛨&lt;/strong&gt;AUTH&lt;/div&gt;&lt;div class=&quot;step&quot; id=&quot;s3&quot;&gt;&lt;strong&gt;⌬&lt;/strong&gt;SCAN&lt;/div&gt;&lt;div class=&quot;step&quot; id=&quot;s4&quot;&gt;&lt;strong&gt;ϟ&lt;/strong&gt;READY&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;bottom&quot;&gt;&lt;span&gt;HACKII VISUAL SIMULATOR&lt;/span&gt;&lt;span id=&quot;clock&quot;&gt;--:--:--&lt;/span&gt;&lt;span&gt;BUILD 2.6.10&lt;/span&gt;&lt;/div&gt;
+&lt;/main&gt;
+&lt;script&gt;
+(function(){
+const messages=[
+&#x27;[BOOT] Loading interface kernel... &lt;b&gt;OK&lt;/b&gt;&#x27;,
+&#x27;[SYS] Mounting visual modules... &lt;b&gt;OK&lt;/b&gt;&#x27;,
+&#x27;[AUTH] Checking local session state... &lt;em&gt;SIMULATED&lt;/em&gt;&#x27;,
+&#x27;[NET] Preparing connection display... &lt;b&gt;READY&lt;/b&gt;&#x27;,
+&#x27;[SCAN] Running interface diagnostics... &lt;b&gt;OK&lt;/b&gt;&#x27;,
+&#x27;[UI] Calibrating holographic renderer... &lt;b&gt;OK&lt;/b&gt;&#x27;,
+&#x27;[CORE] Synchronizing display layers... &lt;b&gt;DONE&lt;/b&gt;&#x27;,
+&#x27;[SYS] Handing off to main interface... &lt;b&gt;READY&lt;/b&gt;&#x27;
+];
+const terminal=document.getElementById(&#x27;terminal&#x27;);let idx=0;
+function addLine(){if(idx&gt;=messages.length)return;const row=document.createElement(&#x27;div&#x27;);row.className=&#x27;line&#x27;;row.style.animationDelay=&#x27;0ms&#x27;;row.innerHTML=&#x27;&lt;span style=&quot;color:#547481&quot;&gt;&#x27;+String(idx+1).padStart(2,&#x27;0&#x27;)+&#x27;&lt;/span&gt;  &#x27;+messages[idx];terminal.appendChild(row);terminal.scrollTop=terminal.scrollHeight;idx++;setTimeout(addLine,390);}
+addLine();
+const start=performance.now(),duration=4700;
+const stages=[{at:0,id:&#x27;s1&#x27;,label:&#x27;INITIALIZING CORE MODULES&#x27;},{at:1200,id:&#x27;s2&#x27;,label:&#x27;VERIFYING LOCAL SESSION&#x27;},{at:2450,id:&#x27;s3&#x27;,label:&#x27;SCANNING INTERFACE LAYERS&#x27;},{at:3650,id:&#x27;s4&#x27;,label:&#x27;FINALIZING SIMULATOR&#x27;}];
+function animate(now){const p=Math.min(100,((now-start)/duration)*100);document.getElementById(&#x27;fill&#x27;).style.width=p+&#x27;%&#x27;;document.getElementById(&#x27;pct&#x27;).textContent=String(Math.floor(p)).padStart(2,&#x27;0&#x27;)+&#x27;%&#x27;;let active=stages[0];for(const st of stages){if(p&gt;=st.at/duration*100)active=st;}document.getElementById(&#x27;phase&#x27;).textContent=active.label;stages.forEach((st,i)=&gt;{const el=document.getElementById(st.id);el.classList.toggle(&#x27;active&#x27;,st===active&amp;&amp;p&lt;100);el.classList.toggle(&#x27;done&#x27;,p&gt;=st.at/duration*100&amp;&amp;(st!==active||p&gt;=100));});if(p&lt;100)requestAnimationFrame(animate);else document.getElementById(&#x27;phase&#x27;).textContent=&#x27;BOOT SEQUENCE COMPLETE&#x27;;}
+requestAnimationFrame(animate);
+function clock(){document.getElementById(&#x27;clock&#x27;).textContent=new Date().toLocaleTimeString(&#x27;en-GB&#x27;);}clock();setInterval(clock,1000);
+const c=document.getElementById(&#x27;matrix&#x27;),ctx=c.getContext(&#x27;2d&#x27;);let w,h,cols,drops;function resize(){w=c.width=innerWidth;h=c.height=innerHeight;cols=Math.ceil(w/17);drops=Array(cols).fill(0).map(()=&gt;Math.random()*h/14);}resize();addEventListener(&#x27;resize&#x27;,resize);let frame=0;function draw(){if(++frame%2===0){ctx.fillStyle=&#x27;rgba(2,7,14,.16)&#x27;;ctx.fillRect(0,0,w,h);ctx.font=&#x27;12px monospace&#x27;;ctx.fillStyle=&#x27;rgba(50,246,255,.52)&#x27;;for(let i=0;i&lt;cols;i++){ctx.fillText(Math.random()&gt;.5?&#x27;1&#x27;:&#x27;0&#x27;,i*17,drops[i]*14);if(drops[i]*14&gt;h&amp;&amp;Math.random()&gt;.975)drops[i]=0;drops[i]+=.42;}}requestAnimationFrame(draw);}draw();
+})();
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;" loading="eager"></iframe></div>
+
+    <div id="stage3">
+        <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SURESHOTE PANEL</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center;
+ font-family:Arial,sans-serif;color:#fff;
+ background:
+ radial-gradient(circle at 15% 15%,rgba(0,245,255,.16),transparent 28%),
+ radial-gradient(circle at 85% 80%,rgba(255,0,190,.18),transparent 30%),
+ linear-gradient(135deg,#02040b,#090019 48%,#02040b);
+ position:relative;
+}
+body:before{
+ content:"";position:fixed;inset:-40%;
+ background:conic-gradient(from 0deg,transparent 0 28%,rgba(0,245,255,.08),transparent 38% 58%,rgba(255,0,190,.08),transparent 70%);
+ animation:bgSpin 16s linear infinite;pointer-events:none;
+}
+body:after{
+ content:"";position:fixed;inset:0;
+ background:repeating-linear-gradient(0deg,transparent 0 4px,rgba(255,255,255,.022) 5px);
+ pointer-events:none;
+}
+
+.win-notify{
+ position:fixed;top:9px;left:50%;transform:translateX(-50%) translateY(-22px);
+ width:min(390px,90vw);z-index:20;pointer-events:none;opacity:0;
+ padding:10px 14px 9px;border-radius:16px;
+ border:1px solid rgba(0,245,255,.30);
+ background:linear-gradient(110deg,rgba(3,12,27,.98),rgba(22,4,34,.98));
+ box-shadow:0 8px 30px rgba(0,0,0,.38),0 0 22px rgba(0,245,255,.16),inset 0 0 18px rgba(255,0,190,.04);
+ overflow:hidden;
+}
+.win-notify:before{
+ content:"";position:absolute;left:0;top:0;width:4px;height:100%;
+ background:linear-gradient(#00f5ff,#55ff9a,#ff31d7);
+ box-shadow:0 0 12px #00f5ff;
+}
+.win-notify:after{
+ content:"";position:absolute;left:-35%;bottom:0;width:35%;height:2px;
+ background:linear-gradient(90deg,transparent,#00f5ff,#55ff9a);
+ animation:notifyScan 1.4s linear infinite;
+}
+.win-row{display:flex;align-items:center;justify-content:center;gap:8px}
+.win-icon{
+ width:27px;height:27px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+ background:rgba(85,255,154,.10);border:1px solid rgba(85,255,154,.35);
+ color:#55ff9a;font-size:13px;box-shadow:0 0 12px rgba(85,255,154,.14);
+}
+.win-copy{text-align:left;min-width:0}
+.win-main{font:800 10px/14px Arial,sans-serif;letter-spacing:1.1px;color:#e9f7ff;white-space:nowrap}
+.win-notify .name{color:#00f5ff}
+.win-notify .amount{
+ color:#55ff9a;font-size:12px;text-shadow:0 0 10px rgba(85,255,154,.35);
+}
+.win-notify .sim{
+ display:block;margin-top:2px;color:#9b79b7;font:700 6px/9px Arial,sans-serif;
+ letter-spacing:1.5px;
+}
+.win-notify.show{animation:notifyIn 3.5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes notifyIn{
+ 0%{opacity:0;transform:translateX(-50%) translateY(-22px) scale(.96)}
+ 10%,80%{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
+ 100%{opacity:0;transform:translateX(-50%) translateY(-12px) scale(.98)}
+}
+@keyframes notifyScan{to{left:110%}}
+
+.box{
+ width:min(410px,92vw);padding:20px 20px 18px;border-radius:26px;position:relative;z-index:2;
+ background:linear-gradient(145deg,rgba(9,16,34,.96),rgba(26,5,36,.94));
+ border:1px solid rgba(0,245,255,.34);
+ box-shadow:0 0 30px rgba(0,245,255,.18),0 0 85px rgba(255,0,190,.12),inset 0 0 35px rgba(0,245,255,.035);
+ animation:cardIn .7s ease both,cardPulse 3.5s ease-in-out infinite;
+}
+.box:before,.box:after{
+ content:"";position:absolute;width:32px;height:32px;border-style:solid;border-color:#00f5ff;
+}
+.box:before{top:-1px;left:-1px;border-width:2px 0 0 2px;border-radius:26px 0 0 0}
+.box:after{right:-1px;bottom:-1px;border-width:0 2px 2px 0;border-radius:0 0 26px 0}
+.topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:9px;letter-spacing:2px}
+.badge{padding:6px 9px;border-radius:999px;border:1px solid rgba(0,245,255,.35);color:#7ffcff;background:rgba(0,245,255,.06)}
+.live{color:#55ff9a;text-shadow:0 0 10px #55ff9a}
+.live i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#55ff9a;box-shadow:0 0 10px #55ff9a;animation:blink 1s infinite}
+.logo{
+ width:100%;height:105px;object-fit:contain;border-radius:18px;margin:2px 0 12px;
+ background:rgba(255,255,255,.96);border:1px solid rgba(255,210,70,.35);
+ box-shadow:0 0 22px rgba(255,180,0,.16);
+ animation:logoFloat 3s ease-in-out infinite;
+}
+h1{
+ margin:0;text-align:center;font-size:28px;font-weight:900;letter-spacing:3px;
+ background:linear-gradient(90deg,#00f5ff,#fff,#ff31d7,#ffd84d,#00f5ff);
+ background-size:320% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+ animation:gradient 3s linear infinite,glow 1.5s ease-in-out infinite alternate;
+}
+h2{margin:5px 0 13px;text-align:center;font-size:9px;letter-spacing:4px;color:#9aa9c7}
+.sim-status{
+ display:flex;justify-content:space-between;gap:8px;margin-bottom:12px;
+}
+.status-card{
+ flex:1;padding:9px 8px;border-radius:12px;text-align:center;
+ border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);
+ font-size:8px;letter-spacing:1.3px;color:#8493b0;
+}
+.status-card strong{display:block;margin-top:4px;color:#fff;font-size:10px}
+.status-card:nth-child(2) strong{color:#55ff9a}
+.status-card:nth-child(3) strong{color:#ff66df}
+.console{
+ border:1px solid rgba(0,245,255,.14);border-radius:15px;padding:11px 12px;
+ background:rgba(0,0,0,.27);margin-bottom:13px;overflow:hidden;
+}
+.console-head{font-size:8px;letter-spacing:2px;color:#58718f;margin-bottom:7px}
+.log{font:10px/20px monospace;color:#9cb0c9;white-space:nowrap;overflow:hidden}
+.log b{color:#55ff9a}.log em{color:#00f5ff;font-style:normal}.log span{color:#ff66df}
+#number{
+ min-height:110px;display:flex;align-items:center;justify-content:center;
+ font-size:92px;font-weight:900;line-height:1;
+ background:linear-gradient(180deg,#fff,#00f5ff 43%,#a23cff 80%,#ff31d7);
+ -webkit-background-clip:text;background-clip:text;color:transparent;
+ filter:drop-shadow(0 0 12px rgba(0,245,255,.4));
+ animation:numberFloat 2.1s ease-in-out infinite;
+}
+.result-ring{
+ width:156px;height:156px;margin:4px auto 8px;border-radius:50%;
+ display:flex;align-items:center;justify-content:center;
+ border:1px solid rgba(0,245,255,.28);
+ background:radial-gradient(circle,rgba(0,245,255,.08),rgba(255,0,190,.035) 55%,transparent 70%);
+ box-shadow:0 0 25px rgba(0,245,255,.12),inset 0 0 22px rgba(255,0,190,.08);
+ animation:ringPulse 2.4s ease-in-out infinite;
+}
+#issue{
+ margin-top:8px;padding:10px;border-radius:11px;text-align:center;
+ border:1px solid rgba(255,216,77,.2);background:rgba(255,216,77,.045);
+ font-size:13px;color:#ffd84d;
+}
+#status{margin-top:11px;text-align:center;color:#ff66df;font-size:10px;letter-spacing:2px;animation:statusPulse 1.5s infinite}
+.sim-note{margin-top:12px;text-align:center;font-size:7px;letter-spacing:1.5px;color:#52617a}
+.progress{height:3px;border-radius:20px;background:#101a2b;overflow:hidden;margin-top:13px}
+.progress i{display:block;height:100%;width:35%;background:linear-gradient(90deg,#00f5ff,#ff31d7);box-shadow:0 0 12px #00f5ff;animation:progress 2.2s ease-in-out infinite}
+.flash{animation:flash .35s cubic-bezier(.2,.8,.2,1)!important}
+@keyframes bgSpin{to{transform:rotate(360deg)}}
+@keyframes cardIn{from{opacity:0;transform:scale(.82) translateY(25px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes cardPulse{50%{box-shadow:0 0 42px rgba(0,245,255,.28),0 0 95px rgba(255,0,190,.17),inset 0 0 42px rgba(0,245,255,.05)}}
+@keyframes gradient{to{background-position:320% center}}
+@keyframes glow{from{filter:drop-shadow(0 0 2px #00f5ff)}to{filter:drop-shadow(0 0 11px #ff31d7)}}
+@keyframes blink{50%{opacity:.25}}
+@keyframes logoFloat{50%{transform:translateY(-3px) scale(1.01)}}
+@keyframes numberFloat{50%{transform:translateY(-5px) scale(1.025)}}
+@keyframes ringPulse{50%{box-shadow:0 0 38px rgba(0,245,255,.25),inset 0 0 30px rgba(255,0,190,.13);transform:scale(1.015)}}
+@keyframes statusPulse{50%{text-shadow:0 0 12px #ff31d7}}
+@keyframes progress{0%{width:8%}50%{width:82%}100%{width:18%}}
+@keyframes flash{0%{transform:scale(1.45);filter:drop-shadow(0 0 25px #00f5ff)}100%{transform:scale(1);filter:drop-shadow(0 0 12px rgba(0,245,255,.4))}}
+
+/* DENSE SIMULATOR HUD LAYER */
+.hud-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 13px}
+.hud-tile{min-width:0;position:relative;overflow:hidden;padding:10px 10px 9px;border:1px solid rgba(0,245,255,.2);border-radius:12px;background:linear-gradient(145deg,rgba(0,245,255,.055),rgba(255,49,215,.025));box-shadow:inset 0 0 18px rgba(0,245,255,.025)}
+.hud-tile:after{content:"";position:absolute;left:-60%;top:0;width:45%;height:1px;background:#00f5ff;box-shadow:0 0 12px #00f5ff;animation:hudSweep 4s linear infinite}
+.hud-k{font-size:7px;letter-spacing:1.5px;color:#7188a8;white-space:nowrap}.hud-v{display:flex;align-items:center;gap:6px;margin-top:6px;font:800 11px/1.2 monospace;color:#dffcff;letter-spacing:.5px}.hud-led{width:6px;height:6px;flex:none;border-radius:50%;background:#55ff9a;box-shadow:0 0 9px #55ff9a;animation:blink 1.2s infinite}
+.hud-dual{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}.hud-panel{min-width:0;border:1px solid rgba(0,245,255,.15);border-radius:13px;background:rgba(0,0,0,.25);padding:11px 12px;overflow:hidden}.hud-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;font:700 8px/1.2 monospace;letter-spacing:1.5px;color:#829bb8}.hud-tag{color:#55ff9a;font-size:7px;letter-spacing:1px;white-space:nowrap}.meter-row{display:grid;grid-template-columns:48px 1fr 24px;align-items:center;gap:7px;margin:8px 0;font:8px monospace;color:#8196b4}.meter-track{height:5px;border-radius:10px;background:#101a2b;overflow:hidden}.meter-fill{height:100%;width:var(--level);border-radius:10px;background:linear-gradient(90deg,#00a8bd,#00f5ff,#55ff9a);box-shadow:0 0 9px rgba(0,245,255,.45);animation:meterBreathe 2.5s ease-in-out infinite alternate}.meter-val{text-align:right;color:#b7faff}.mini-terminal{height:76px;overflow:hidden;font:8px/1.85 monospace;color:#7898ad}.mini-terminal div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mini-terminal b{color:#55ff9a;font-weight:500}.mini-terminal em{color:#00f5ff;font-style:normal}.hud-readout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:10px 0 0}.readout{padding:8px 5px;text-align:center;border:1px solid rgba(255,255,255,.07);border-radius:9px;background:rgba(255,255,255,.025)}.readout span{display:block;font:7px monospace;letter-spacing:1px;color:#6d829f}.readout strong{display:block;margin-top:5px;font:800 10px monospace;color:#c6faff}.scan-overlay{pointer-events:none;position:fixed;inset:0;z-index:1;opacity:.4;background:repeating-linear-gradient(0deg,transparent 0 5px,rgba(0,245,255,.025) 6px);mix-blend-mode:screen}.box{max-height:96dvh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#17445b transparent}.box::-webkit-scrollbar{width:3px}.box::-webkit-scrollbar-thumb{background:#17445b;border-radius:4px}
+@keyframes hudSweep{0%{left:-60%}100%{left:130%}}@keyframes meterBreathe{from{filter:brightness(.72)}to{filter:brightness(1.35)}}
+@media(max-width:480px){.box{width:94vw;padding:14px 12px 13px;border-radius:19px}.topline{font-size:7px;letter-spacing:1px;margin-bottom:9px}.logo{height:66px!important;margin:0 0 8px!important}h1{font-size:clamp(18px,5vw,24px);letter-spacing:1px}h2{margin:4px 0 9px;font-size:8px;letter-spacing:2px}.sim-status{gap:5px;margin-bottom:9px}.status-card{padding:7px 4px;font-size:7px;letter-spacing:.6px}.status-card strong{font-size:9px}.hud-grid{gap:5px;margin-bottom:8px}.hud-tile{padding:8px 6px}.hud-k{font-size:6px;letter-spacing:.8px}.hud-v{font-size:9px;gap:4px}.hud-dual{gap:6px;margin-bottom:8px}.hud-panel{padding:8px 8px;border-radius:10px}.hud-head{font-size:7px;letter-spacing:.7px;margin-bottom:8px}.meter-row{grid-template-columns:35px 1fr 20px;gap:4px;font-size:7px;margin:7px 0}.mini-terminal{font-size:7px;height:69px}.result-ring{width:122px;height:122px}.result-ring #number{font-size:72px;min-height:86px}.hud-readout{gap:5px;margin-top:8px}.readout{padding:7px 3px}.readout span{font-size:6px;letter-spacing:.5px}.readout strong{font-size:9px}.sim-note{font-size:6px;line-height:1.5}.win-main{font-size:9px}}
+@media(max-height:700px) and (min-width:481px){.box{padding:12px 15px}.logo{height:60px!important}.result-ring{width:112px;height:112px}.result-ring #number{font-size:68px;min-height:80px}.hud-panel{padding:8px}.mini-terminal{height:57px}.hud-tile{padding:7px}}
+@media(prefers-reduced-motion:reduce){.scan-overlay,.hud-tile:after,.meter-fill,.hud-led{animation:none!important}}
+</style>
+</head>
+
+<body>
+<div id="winNotify" class="win-notify" aria-live="polite">
+  <div class="win-row">
+    <div class="win-icon">✓</div>
+    <div class="win-copy">
+      <div class="win-main"><span class="name" id="winName">Thvxegsdfs</span> &nbsp; WON &nbsp; <span class="amount" id="winAmount">₹5,000</span></div>
+      <span class="sim">SIMULATED WIN • WIN NOTIFICATION</span>
+    </div>
+  </div>
+</div>
+<div class="box">
+  <div class="topline">
+    <div class="badge">HACKII • DM FIRST PANEL</div>
+    <div class="live"><i></i> LIVE UI</div>
+  </div>
+
+  <img class="logo" src="https://cdn.phototourl.com/member/2026-10-01-90773896-f028-44af-ae94-11d8797f4839.png" alt="Dmfirst">
+
+  <h1>𝗛𝗔𝗖𝗞𝗜𝗜 𝗦𝗨𝗥𝗘𝗦𝗛𝗢𝗧 💠</h1>
+  <h2>DMFIRST PANEL</h2>
+
+  <div class="sim-status">
+    <div class="status-card">ENGINE<strong>ONLINE</strong></div>
+    <div class="status-card">MODE<strong>PANEL</strong></div>
+    <div class="status-card">UI<strong>ACTIVE</strong></div>
+  </div>
+
+  <div class="hud-grid" aria-label="Simulator status cards">
+    <div class="hud-tile"><div class="hud-k">CORE STATUS</div><div class="hud-v"><i class="hud-led"></i>STABLE</div></div>
+    <div class="hud-tile"><div class="hud-k">SIGNAL LINK</div><div class="hud-v"><i class="hud-led"></i>SYNCED</div></div>
+    <div class="hud-tile"><div class="hud-k">SCAN MODE</div><div class="hud-v"><i class="hud-led"></i>ACTIVE</div></div>
+  </div>
+
+  <div class="hud-dual">
+    <section class="hud-panel"><div class="hud-head">SIGNAL METERS <span class="hud-tag">LIVE HUD</span></div>
+      <div class="meter-row"><span>UPLINK</span><div class="meter-track"><div class="meter-fill" style="--level:86%"></div></div><span class="meter-val">86</span></div>
+      <div class="meter-row"><span>CORE</span><div class="meter-track"><div class="meter-fill" style="--level:72%"></div></div><span class="meter-val">72</span></div>
+      <div class="meter-row"><span>SCAN</span><div class="meter-track"><div class="meter-fill" style="--level:94%"></div></div><span class="meter-val">94</span></div>
+    </section>
+    <section class="hud-panel"><div class="hud-head">SYSTEM TERMINAL <span class="hud-tag">SIM</span></div>
+      <div class="mini-terminal"><div><b>[OK]</b> HUD kernel loaded</div><div><b>[OK]</b> interface channels ready</div><div><em>[SCAN]</em> visual sweep running</div><div><em>[LINK]</em> awaiting panel data</div><div><b>[SYS]</b> <span class="hud-clock">--:--:--</span> local runtime</div></div>
+    </section>
+  </div>
+
+<div class="result-ring">
+    <div id="number">--</div>
+  </div>
+
+  <div id="issue">Loading...</div>
+  <div id="status">⚡ 𝗛𝗔𝗖𝗞𝗜𝗜 𝗦𝗨𝗥𝗘𝗦𝗛𝗢𝗧 💠 • DM FIRST PANEL</div>
+
+  <div class="progress"><i></i></div>
+  <div class="hud-readout"><div class="readout"><span>DISPLAY MODE</span><strong>SIM HUD</strong></div><div class="readout"><span>RENDER</span><strong>STABLE</strong></div><div class="readout"><span>LOCAL TIME</span><strong class="hud-clock">--:--:--</strong></div></div>
+  <div class="sim-note">SIMULATOR VISUALS • LIVE RESULT DATA IS SHOWN SEPARATELY</div>
+</div>
+<div class="scan-overlay" aria-hidden="true"></div>
+</body>
+<script>
+(function(){
+  const updateHudClock=()=>{const value=new Date().toLocaleTimeString([], {hour12:false});document.querySelectorAll(".hud-clock").forEach(el=>el.textContent=value);};
+  updateHudClock();setInterval(updateHudClock,1000);
+})();
+
+(function(){
+  const names = [
+    "Thvxegsdfs","Rkzmpqla","Vnqtxsde","Jxplmora","Qwztrnks",
+    "Bhvxkqpd","Mtzrlawe","Kxvndqsa","Pqzlmftr","Yxgkdsve"
+  ];
+
+  function randomAmount(){
+    // Visual Real range: ₹5,000–₹20,000.
+    const min=5000, max=20000;
+    const step=500;
+    return Math.floor((Math.random()*(max-min+step))/step)*step+min;
+  }
+
+  function showWin(){
+    const box=document.getElementById("winNotify");
+    const name=document.getElementById("winName");
+    const amount=document.getElementById("winAmount");
+    if(!box || !name || !amount) return;
+
+    name.textContent=names[Math.floor(Math.random()*names.length)];
+    amount.textContent="₹"+randomAmount().toLocaleString("en-IN");
+
+    box.classList.remove("show");
+    void box.offsetWidth;
+    box.classList.add("show");
+  }
+
+  // First notification after the interface has settled, then periodically.
+  setTimeout(showWin,1800);
+  setInterval(showWin,6500);
+})();
+</script>
+</body>
+<script>
+(function(){
+ const input=document.getElementById("uidInput");
+ const toggle=document.getElementById("uidToggle");
+ if(toggle && input){
+   toggle.addEventListener("click",function(){
+     input.type=input.type==="password"?"text":"password";
+     toggle.textContent=input.type==="password"?"●":"○";
+   });
+ }
+})();
+function startSequence(){
+ const uid=document.getElementById("uidInput").value;
+ const uidError=document.getElementById("uidError");
+ const uidWrap=document.querySelector(".uid-wrap");
+ if(uid!=="144421"){
+   if(uidError)uidError.textContent="HACKII SIR SE UID VERIFY KARBOU";
+   if(uidWrap){uidWrap.classList.remove("invalid");void uidWrap.offsetWidth;uidWrap.classList.add("invalid");}
+   return;
+ }
+ if(uidError)uidError.textContent="";
+ if(uidWrap)uidWrap.classList.remove("invalid");
+ document.getElementById("stage1").style.display="none";
+ document.getElementById("stage2").style.display="block";
+ document.getElementById("stage3").style.display="none";
+ setTimeout(function(){
+   document.getElementById("stage2").style.display="none";
+   document.getElementById("stage3").style.display="block";
+   loadResultAPI();
+ },5000);
+}
+let resultTimer=null,apiStarted=false;
+async function loadResultAPI(){
+ if(apiStarted)return; apiStarted=true;
+ const API="https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json";
+ let lastIssue="",lastNumber="",timer=null,inFlight=false;
+
+ function fastWindow(){
+   const s=new Date().getSeconds();
+   return s>=50 || s<=2;
+ }
+ function schedule(){
+   clearTimeout(timer);
+   timer=setTimeout(getData,fastWindow()?40:1200);
+ }
+
+ async function getData(){
+   if(inFlight){schedule();return;}
+   inFlight=true;
+   try{
+     const controller=new AbortController();
+     const timeout=setTimeout(()=>controller.abort(),900);
+     const r=await fetch(API+"?t="+Date.now(),{
+       cache:"no-store",credentials:"omit",signal:controller.signal,
+       headers:{"Cache-Control":"no-cache, no-store, max-age=0","Pragma":"no-cache"}
+     });
+     clearTimeout(timeout);
+     if(!r.ok)throw new Error("HTTP "+r.status);
+     const d=await r.json(),list=d?.data?.list||[];
+     if(!list.length)throw new Error("No result data");
+
+     const x=list[0],issue=String(x.issueNumber??""),number=String(x.number??"--");
+     if(issue!==lastIssue || number!==lastNumber){
+       lastIssue=issue; lastNumber=number;
+       const n=document.getElementById("number");
+       const i=document.getElementById("issue");
+       const s=document.getElementById("status");
+       if(n){
+         n.textContent=number;
+         n.classList.remove("flash");
+         void n.offsetWidth;
+         n.classList.add("flash");
+       }
+       if(i)i.textContent="Issue : "+(issue||"—");
+       if(s)s.textContent="⚡ HACKII ( SURESHOT ) • LIVE RESULT UPDATED";
+     }
+   }catch(e){
+     if(e?.name!=="AbortError")console.log(e);
+   }finally{
+     inFlight=false;
+     schedule();
+   }
+ }
+ await getData();
+}
+</script></html>
